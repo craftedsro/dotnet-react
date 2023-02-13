@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useId, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Form, FormButton, FormGroup, Segment } from "semantic-ui-react";
 import { Activity } from "../../../models/Activity";
 
@@ -6,9 +6,14 @@ interface Props {
   activity?: Activity;
   onSubmitForm: (activity: Activity) => void;
   onCloseForm: () => void;
+  submitting: boolean;
 }
-
-const ActivityForm = ({ activity: selectedActivity, onSubmitForm, onCloseForm }: Props) => {
+const ActivityForm = ({
+  activity: selectedActivity,
+  onSubmitForm,
+  onCloseForm,
+  submitting
+}: Props) => {
   const initialState = selectedActivity ?? {
     id: "",
     title: "",
@@ -27,9 +32,11 @@ const ActivityForm = ({ activity: selectedActivity, onSubmitForm, onCloseForm }:
     onSubmitForm(activity);
   };
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = event.target;
-    
+
     setActivity({ ...activity, [name]: value });
   };
 
@@ -58,6 +65,7 @@ const ActivityForm = ({ activity: selectedActivity, onSubmitForm, onCloseForm }:
           onChange={handleInputChange}
         />
         <Form.Input
+          type='date'
           name='date'
           placeholder='Date'
           value={activity.date}
@@ -81,12 +89,14 @@ const ActivityForm = ({ activity: selectedActivity, onSubmitForm, onCloseForm }:
             type='submit'
             content='Submit'
             positive
+            loading={submitting}
           />
           <FormButton
             type='button'
             content='Cancle'
             floated='right'
             onClick={onCloseForm}
+            loading={submitting}
           />
         </FormGroup>
       </Form>
